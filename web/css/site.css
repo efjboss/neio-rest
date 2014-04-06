@@ -1,0 +1,13 @@
+#templateslist, #templatespreview, #previewoptions {
+    padding-left: 20px;
+}
+
+#templates {
+    padding-bottom: 20px;
+}
+
+#queryresult {
+    margin-top: 20px;
+    padding-left: 20px;
+    padding-bottom: 20px;
+}
