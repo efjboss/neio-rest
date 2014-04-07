@@ -71,13 +71,20 @@ class SiteController extends Controller {
 
     public function actionQuery()
     {
-        $data = $_POST;
 
-        if ($data) {
+        if (isset($_POST)) {
+            $data = $_POST;
+
             $url = $data['apiurl'];
             $method = $data['method'];
             unset($data['apiurl']);
             unset($data['method']);
+            unset($data['params_enabled']);
+
+            $postdata = [];
+            for ($i = 0; $i < count($data['params_key']); $i++) {
+                $postdata[$data['params_key'][$i]] = $data['params_val'][$i];
+            }
 
             $ch = curl_init();
 
@@ -88,10 +95,12 @@ class SiteController extends Controller {
             //curl_setopt($ch, CURLOPT_AUTOREFERER, 1);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 5);
+
 
             if ($method === 'POST') {
-                curl_setopt($ch, CURLOPT_POST, true);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $postdata);
             }
 
             $res = curl_exec($ch);
