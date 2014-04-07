@@ -39,16 +39,16 @@
             <div class="form-group col-lg-2">
                 <input id="params_key" name="params_key[]" type="text" class="form-control" />
             </div>
-            <div class="form-group col-lg-7">
+            <div class="form-group col-lg-6">
                 <input id="params_val" name="params_val[]" type="text" class="form-control" />
             </div>
-            <div class="form-group col-lg-2">
+            <div class="form-group col-lg-3">
                 <button type="button" class="addparam btn btn-primary">Add</button>
                 <button type="button" class="removeparam btn btn-danger">Remove</button>
             </div>
         </div>
 
-        <div class="row col-lg-2">
+        <div class="row col-lg-3">
             <button id="submitbutton" type="button" class="btn btn-primary">Query</button>
             <button id="savebutton" type="button" class="btn btn-success">Save</button>
         </div>
