@@ -141,7 +141,7 @@ $(document).ready(function() {
         var form = $('form');
         var form_old = $('form').clone(true);
 
-        var name = prompt('Template name?');
+        var name = prompt('Template name?', currentTemplate.name);
 
         form.find('input').prop('disabled', false);
 
