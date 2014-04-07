@@ -3,6 +3,7 @@ $(document).ready(function() {
     loadTemplates();
     $('#previewoptions').hide();
     $('#queryresult').hide();
+    $('#queryresultcontainer').hide();
 
     var currentTemplate;
 
@@ -160,8 +161,10 @@ $(document).ready(function() {
         var form = $('form');
 
         $.post('/neio-rest/web/?r=site/query', form.serialize(), function(data) {
+            console.log(data);
             $('#queryresult').empty().append(data.data.result);
             $('#queryresult').show();
+            $('#queryresultcontainer').show();
         });
     });
 });

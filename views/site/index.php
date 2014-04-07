@@ -53,8 +53,9 @@
             <button id="savebutton" type="button" class="btn btn-success">Save</button>
         </div>
     </form>
-    <div id="queryresult" class="row col-lg-12 panel panel-default">
-
+    <div id="queryresultcontainer" class="row col-lg-12 panel panel-default">
+        <p id="queryresult">
+        </p>
     </div>
 </div>
 
