@@ -19,15 +19,23 @@ class SiteController extends Controller {
 
     public function actionSave()
     {
+        try {
         if (array_key_exists('name', $_REQUEST)) {
-            $template = new Template();
-            $template->name = $_REQUEST['name'];
-            $data = $_REQUEST;
-            Yii::info(var_export($data, true));
-            $template->data = json_encode($data);
-            if ($template->save()) {
-                return new Response(['format' => Response::FORMAT_JSON, 'data' => ['status' => 'success', 'message' => 'Template saved succesfully']]);
+            $template = Template::find(['name' => $_REQUEST['name']]);
+            if (!$template) {
+                $template = new Template();
+                $template->name = $_REQUEST['name'];
             }
+            $data = $_REQUEST;
+            $template->data = json_encode($data);
+            if ($template->save() !== false) {
+                return new Response(['format' => Response::FORMAT_JSON, 'data' => ['status' => 'success', 'message' => 'Template saved succesfully']]);
+            } else {
+                Yii::trace('Could not save template');
+            }
+        }
+        } catch(\Exception $e) {
+            Yii::trace($e->getMessage());
         }
         return new Response(['format' => Response::FORMAT_JSON, 'data' => ['status' => 'error', 'message' => 'Could not save template']]);
     }
