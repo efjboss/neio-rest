@@ -73,11 +73,11 @@ $(document).ready(function() {
             'name=' + name,
             function(data) {
                 preview.empty();
-                preview.append('<tr><th></th><th>Key</th><th>Value</th></tr>');
-                preview.append('<tr><td></td><td>name</td><td id="previewname">' + data.name + '</td></tr>');
-                preview.append('<tr><td></td><td>apiurl</td><td>' + data.apiurl + ' (' + data.method + ')</td></tr>');
+                preview.append('<tr class=""><th>Key</th><th>Value</th></tr>');
+                preview.append('<tr class="info"><td>name</td><td id="previewname">' + data.name + '</td></tr>');
+                preview.append('<tr class="info"><td>apiurl</td><td>' + data.apiurl + ' (<b>' + data.method + '</b>)</td></tr>');
                 for (var i = 0; i < data.params_enabled.length; i++) {
-                    preview.append('<tr class="' + (data.params_enabled[i] == 'on' ? 'success' : 'warning') +  ' "><td>param</td><td>' + data.params_key[i] + '</td><td>' + data.params_val[i] + '</td></tr>')
+                    preview.append('<tr class="' + (data.params_enabled[i] == 'on' ? 'success' : 'warning') +  ' "><td>' + data.params_key[i] + '</td><td>' + data.params_val[i] + '</td></tr>')
                 }
                 $('#previewoptions').show();
                 currentTemplate = data;
