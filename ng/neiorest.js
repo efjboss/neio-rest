@@ -9,7 +9,8 @@ var request = {
     'url':'',
     'parameters': [
         {'key': '', 'value': '', 'active': true}
-    ]
+    ],
+    'data': {},
 };
 
 var RequestCtrl = function($scope, $http) {
@@ -38,13 +39,20 @@ var RequestCtrl = function($scope, $http) {
     }
 
     $scope.query = function() {
-        var data = {};
 
         angular.forEach($scope.request.parameters, function(entry, idx) {
             if (entry.active) {
-                data[entry.key] = [entry.value];
+                $scope.request.data[entry.key] = [entry.value];
             }
         });
+
+        $http.post('../api/query.php', request)
+            .success(function() {
+                console.log('success');
+            })
+            .error(function() {
+                console.log('error');
+            });
     };
 };
 
