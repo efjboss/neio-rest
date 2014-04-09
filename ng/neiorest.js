@@ -3,22 +3,31 @@
 
 var app = angular.module('neioREST', ['ui.bootstrap', 'ngSanitize']);
 
-var request = {
-    methods: ['GET', 'POST', 'HEAD', 'PUT', 'DELETE'],
-    method:'GET',
-    url:'',
-    parameters: [
-        {key: '', value: '', active: true}
-    ],
-    data: {},
-};
+function defaultRequest() {
+    return {
+        methods: ['GET', 'POST', 'HEAD', 'PUT', 'DELETE'],
+        method:'GET',
+        url:'',
+        parameters: [
+            {key: '', value: '', active: true}
+        ],
+        data: {},
+    };
+}
 
-var response = {
-    status: 0,
-    content: '',
-    preview: '',
-    headers: [],
-};
+var request = defaultRequest();
+
+function defaultResponse() {
+    return {
+        status: 0,
+        content: '',
+        preview: '',
+        headers: [],
+    };
+}
+
+var response = defaultResponse();
+
 
 var RequestCtrl = function($scope, $http, $sanitize, $sce) {
     $scope.request = request;
@@ -50,9 +59,23 @@ var RequestCtrl = function($scope, $http, $sanitize, $sce) {
 
         angular.forEach($scope.request.parameters, function(entry, idx) {
             if (entry.active) {
-                $scope.request.data[entry.key] = [entry.value];
+                var key = entry.key;
+                var val = entry.value;
+
+                if ($scope.request.data[key]) {
+                    var o = $scope.request.data[key];
+                    if (Array.isArray(o)) {
+                        o.push(val);
+                    } else {
+                        o = [o, val];
+                    }
+                } else {
+                    $scope.request.data[key] = val;
+                }
             }
         });
+
+        console.log(request);
 
         $http.post('../api/query.php', request)
             .success(function(data) {
