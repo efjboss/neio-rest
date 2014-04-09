@@ -20,127 +20,159 @@
 </head>
 <body ng-controller="neioRESTCtrl">
     <div class="container">
-        <div class="">
-            <div class="row panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Request</h3>
+        <div ng-repeat="message in messages" class="row panel" ng-class="'panel-' + message.type">
+            <div class="panel-heading">
+                <button ng-click="closeMessage($index)" type="button" class="close" aria-hidden="true">&times;</button>
+                <h3 class="panel-title">{{message.type}}</h3>
+            </div>
+            <div class="panel-body">
+                {{message.content}}
+            </div>
+        </div>
+
+        <div class="row panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title col-xs-2">Templates</h3>
+
+                <div class="input-group col-xs-2 col-xs-offset-10">
+                    <input class="form-control input-sm" type="text" name="templatefilter" ng-model="templateFilter" placeholder="filter"/>
                 </div>
-                <div class="panel-body">
-                    <div class="col-md-12">
+            </div>
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <ul class="list-inline">
+                        <li ng-repeat="template in templates | filter:templateFilter">
+                            <a href="#">{{template.name}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
 
-                        <div class="form-group">
-                            <div class="input-group">
-                                <div class="input-group-btn">
-                                    <button class="btn btn-default dropdown-toggle">
-                                        {{request.method}} <span class="caret"></span>
-                                    </button>
-                                    <ul class="dropdown-menu">
-                                        <li ng-repeat="method in request.methods">
-                                            <a ng-click="setMethod(method)">{{method}}</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <input type="text" ng-model="request.url" name="requestUrl" placeholder="url" class="form-control" />
-                                <div class="input-group-btn">
-                                    <button ng-click="query()" class="btn btn-primary">
-                                        <span class="glyphicon glyphicon-send">
-                                            Send
-                                        </span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+        <div class="row panel panel-default">
+            <div class="panel-heading">
+                <h3 class="col-xs-2 panel-title">Request</h3>
 
-                        <div class="row">
-                            <tabset>
-                            <tab heading="Parameters">
-                                <div class="panel-body col-md-12">
-                                    <div class="form-group">
-                                        <label class="col-xs-1">state</label>
-                                        <label class="col-xs-2">key</label>
-                                        <label class="col-xs-9">value</label>
-                                    </div>
-                                    <div ng-repeat="parameter in request.parameters" class="">
-                                            <div class="form-group col-xs-1">
-                                                <button ng-click="toggleActive(parameter)" class="btn btn-sm" ng-class="{'btn-info': parameter.active, 'btn-warning': !parameter.active}">
-                                                    <span class="glyphicon" ng-class="{'glyphicon-eye-open': parameter.active, 'glyphicon-eye-close': !parameter.active}"></span>
-                                                </button>
-                                            </div>
-                                            <div class="form-group col-xs-2">
-                                                <input type="text" ng-model="parameter.key" ng-disabled="!parameter.active" value="{{parameter.key}}" class="form-control input-sm"/>
-                                            </div>
-                                            <div class="form-group col-xs-7">
-                                                <input type="text" ng-model="parameter.value" ng-disabled="!parameter.active" value="{{parameter.value}}" class="form-control input-sm"/>
-                                            </div>
-                                            <div class="form-group col-xs-2">
-                                                <button ng-click="addParameter($index)" class="btn btn-sm btn-success">
-                                                    <span class="glyphicon glyphicon-plus"></span>
-                                                </button>
-                                                <button ng-click="removeParameter($index, parameter)" class="btn btn-sm btn-danger">
-                                                    <span class="glyphicon glyphicon-minus"></span>
-                                                </button>
-                                            </div>
-                                    </div>
-                                </div>
-                            </tab>
-                            <tab heading="Headers">
-                                <div class="panel-body">
-                                    bar
-                                </div>
-                            </tab>
-                            </tabset>
-                        </div>
+                <div class="input-group col-xs-3 col-xs-offset-9">
+                    <input class="form-control input-sm" type="text" name="templatename" ng-model="request.name" placeholder="template name"/>
+                    <div class="input-group-btn">
+                        <button ng-click="addTemplate(request.name)" type="button" class="btn btn-primary btn-sm">Save current</button>
                     </div>
                 </div>
             </div>
+            <div class="panel-body">
+                <div class="col-md-12">
 
-            <div class="row panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Response</h3>
-                </div>
-
-                <div class="panel-body">
-                    <div class="col-md-12">
-                        <div collapse="progress.collapsed" class="row">
-                            <div class="col-md-6 col-md-offset-3">
-                                <progressbar type="{{progress.type}}"
-                                    class="progress-striped active"
-                                    value="progress.value">
-                                    processing...
-                                </progressbar>
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-btn">
+                                <button class="btn btn-default dropdown-toggle">
+                                    {{request.method}} <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li ng-repeat="method in request.methods">
+                                        <a ng-click="setMethod(method)">{{method}}</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <input type="text" ng-model="request.url" name="requestUrl" placeholder="url" class="form-control" />
+                            <div class="input-group-btn">
+                                <button ng-click="query()" class="btn btn-primary">
+                                    <span class="glyphicon glyphicon-send">
+                                        Send
+                                    </span>
+                                </button>
                             </div>
                         </div>
-                        <div collapse="response.collapsed" class="row">
-                            <tabset>
-                                <tab heading="Content">
-                                    <div class="panel-body">
-                                        <div hljs source="response.content">
-                                        </div>
-                                    </div>
-                                </tab>
-                                <tab heading="Preview">
-                                    <div class="panel-body">
-                                        <div ng-bind-html="response.preview">
-                                        </div>
-                                    </div>
-                                </tab>
-                                <tab heading="Headers">
-                                    <div class="panel-body">
-                                        <table class="table table-striped">
-                                            <tr ng-repeat="header in response.headers">
-                                                <td>{{header.header}}</td>
-                                                <td>{{header.content}}</td>
-                                            </tr>
-                                        </table>
-                                    </div>
-                                </tab>
-                            </tabset>
+                    </div>
+
+                    <div class="row">
+                        <tabset>
+                        <tab heading="Parameters">
+                        <div class="panel-body col-md-12">
+                            <div class="form-group">
+                                <label class="col-xs-1">state</label>
+                                <label class="col-xs-2">key</label>
+                                <label class="col-xs-9">value</label>
+                            </div>
+                            <div ng-repeat="parameter in request.parameters" class="">
+                                <div class="form-group col-xs-1">
+                                    <button ng-click="toggleActive(parameter)" class="btn btn-sm" ng-class="{'btn-info': parameter.active, 'btn-warning': !parameter.active}">
+                                        <span class="glyphicon" ng-class="{'glyphicon-eye-open': parameter.active, 'glyphicon-eye-close': !parameter.active}"></span>
+                                    </button>
+                                </div>
+                                <div class="form-group col-xs-2">
+                                    <input type="text" ng-model="parameter.key" ng-disabled="!parameter.active" value="{{parameter.key}}" class="form-control input-sm"/>
+                                </div>
+                                <div class="form-group col-xs-7">
+                                    <input type="text" ng-model="parameter.value" ng-disabled="!parameter.active" value="{{parameter.value}}" class="form-control input-sm"/>
+                                </div>
+                                <div class="form-group col-xs-2">
+                                    <button ng-click="addParameter($index)" class="btn btn-sm btn-success">
+                                        <span class="glyphicon glyphicon-plus"></span>
+                                    </button>
+                                    <button ng-click="removeParameter($index, parameter)" class="btn btn-sm btn-danger">
+                                        <span class="glyphicon glyphicon-minus"></span>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
+                        </tab>
+                        <tab heading="Headers">
+                        <div class="panel-body">
+                            bar
+                        </div>
+                        </tab>
+                        </tabset>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-md-3">
+
+        <div class="row panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Response</h3>
+            </div>
+
+            <div class="panel-body">
+                <div class="col-md-12">
+                    <div collapse="progress.collapsed" class="row">
+                        <div class="col-md-6 col-md-offset-3">
+                            <progressbar type="{{progress.type}}"
+                            class="progress-striped active"
+                            value="progress.value">
+                            processing...
+                            </progressbar>
+                        </div>
+                    </div>
+                    <div collapse="response.collapsed" class="row">
+                        <tabset>
+                        <tab heading="Content">
+                        <div class="panel-body">
+                            <div hljs source="response.content">
+                            </div>
+                        </div>
+                        </tab>
+                        <tab heading="Preview">
+                        <div class="panel-body">
+                            <div ng-bind-html="response.preview">
+                            </div>
+                        </div>
+                        </tab>
+                        <tab heading="Headers">
+                        <div class="panel-body">
+                            <table class="table table-striped">
+                                <tr ng-repeat="header in response.headers">
+                                    <td>{{header.header}}</td>
+                                    <td>{{header.content}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                        </tab>
+                        </tabset>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </body>

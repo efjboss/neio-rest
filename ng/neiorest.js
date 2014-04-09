@@ -5,6 +5,7 @@ var app = angular.module('neioREST', ['ui.bootstrap', 'hljs', 'ngSanitize']);
 
 function defaultRequest() {
     return {
+        name: '',
         methods: ['GET', 'POST', 'HEAD', 'PUT', 'DELETE'],
         method:'GET',
         url:'',
@@ -29,6 +30,12 @@ function defaultResponse() {
 
 var response = defaultResponse();
 
+function defaultMessage() {
+    return {
+        content: 'foo',
+        type: 'danger'
+    };
+}
 
 var neioRESTCtrl = function($scope, $http, $sanitize, $sce, $timeout) {
     $scope.request = request;
@@ -38,6 +45,20 @@ var neioRESTCtrl = function($scope, $http, $sanitize, $sce, $timeout) {
         type: 'primary',
         collapsed: true
     };
+    $scope.messages = [];
+    $scope.templates = [];
+
+    $scope.warn = function(message) {
+        $scope.messages.push({content: message, type: 'danger'});
+    };
+
+    $scope.inform = function(message) {
+        $scope.messages.push({content: message, type: 'info'});
+    };
+
+    $scope.closeMessage = function(index) {
+        $scope.messages.splice(index, 1);
+    }
 
     $scope.setMethod = function(method) {
         $scope.request.method = method;
@@ -61,6 +82,23 @@ var neioRESTCtrl = function($scope, $http, $sanitize, $sce, $timeout) {
         parameter.active = !parameter.active;
     }
 
+    $scope.addTemplate = function(name) {
+        $scope.request.name = name;
+        $http.post('../api/save.php', request)
+            .success(function(data) {
+                console.log(data);
+                if (data.status == 'success') {
+                    $scope.templates.push(data.data);
+                    $scope.inform('Template saved');
+                } else {
+                    $scope.warn('Template could not be saved: ' + data.message);
+                }
+            })
+            .error(function(data) {
+                $scope.warn('Template could not be saved');
+            });
+    }
+
     $scope.finish = function() {
         $timeout(function() {
             $scope.progress.type = 'success';
@@ -75,6 +113,8 @@ var neioRESTCtrl = function($scope, $http, $sanitize, $sce, $timeout) {
 
     $scope.query = function() {
         $scope.progress.collapsed = false;
+
+        $scope.request.data = {};
 
         angular.forEach($scope.request.parameters, function(entry, idx) {
             if (entry.active) {
@@ -117,6 +157,8 @@ var neioRESTCtrl = function($scope, $http, $sanitize, $sce, $timeout) {
                                                             '">' +
                                                             '</iframe>');
 
+                $scope.request.data = {};
+
                 $scope.progress.value = 100;
                 $scope.finish();
             })
@@ -126,4 +168,13 @@ var neioRESTCtrl = function($scope, $http, $sanitize, $sce, $timeout) {
         $scope.finish();
 
     };
+
+    $http.get('../api/list.php')
+        .success(function (data) {
+            $scope.templates = data;
+        })
+        .error(function (data) {
+            $scope.warn('Could not get a list of templates');
+        });
+
 };
