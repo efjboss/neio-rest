@@ -3,6 +3,7 @@
 <head>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
     <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.10.0.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-sanitize.js"></script>
     <script src="neiorest.js"></script>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="neiorest.css">
@@ -85,7 +86,7 @@
                 </div>
             </div>
 
-            <div class="row panel panel-default">
+            <div class="row panel panel-default" ng-controller="ResponseCtrl">
                 <div class="panel-heading">
                     <h3 class="panel-title">Response</h3>
                 </div>
@@ -93,7 +94,31 @@
                 <div class="panel-body">
                     <div class="col-md-12">
                         <div class="row">
-                            foo
+                            <tabset>
+                                <tab heading="Headers">
+                                    <div class="panel-body">
+                                        <table class="table table-striped">
+                                            <tr ng-repeat="header in response.headers">
+                                                <td>{{header.header}}</td>
+                                                <td>{{header.content}}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </tab>
+                                <tab heading="Response (raw)">
+                                    <div class="panel-body">
+                                        <pre>
+                                            {{response.content}}
+                                        </pre>
+                                    </div>
+                                </tab>
+                                <tab heading="Response (preview)">
+                                    <div class="panel-body">
+                                            <div ng-bind-html="response.preview">
+                                            </div>
+                                    </div>
+                                </tab>
+                            </tabset>
                         </div>
                     </div>
                 </div>

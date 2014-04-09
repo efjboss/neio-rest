@@ -1,20 +1,28 @@
 
 'use strict';
 
-var app = angular.module('neioREST', ['ui.bootstrap']);
+var app = angular.module('neioREST', ['ui.bootstrap', 'ngSanitize']);
 
 var request = {
-    'methods': ['GET', 'POST', 'HEAD', 'PUT', 'DELETE'],
-    'method':'GET',
-    'url':'',
-    'parameters': [
-        {'key': '', 'value': '', 'active': true}
+    methods: ['GET', 'POST', 'HEAD', 'PUT', 'DELETE'],
+    method:'GET',
+    url:'',
+    parameters: [
+        {key: '', value: '', active: true}
     ],
-    'data': {},
+    data: {},
 };
 
-var RequestCtrl = function($scope, $http) {
+var response = {
+    status: 0,
+    content: '',
+    preview: '',
+    headers: [],
+};
+
+var RequestCtrl = function($scope, $http, $sanitize, $sce) {
     $scope.request = request;
+    $scope.response = response;
 
     $scope.setMethod = function(method) {
         $scope.request.method = method;
@@ -47,12 +55,23 @@ var RequestCtrl = function($scope, $http) {
         });
 
         $http.post('../api/query.php', request)
-            .success(function() {
-                console.log('success');
+            .success(function(data) {
+                $scope.response.content = data.content;
+                $scope.response.headers = [];
+                angular.forEach(data.headers, function(val, key) {
+                    $scope.response.headers.push({'header': key, 'content': val});
+                });
+                //var content = $sanitize(data.content);
+                //var type = $sanitize(data.headers['content_type']);
+                //$sce.trustAsHtml($scope.response.preview);
+                $scope.response.preview = $sce.trustAsHtml('<iframe height="500px" class="col-xs-12" type"content" src="data:' + data.headers['content_type'] + ',' + encodeURIComponent(data.content) + '"></iframe>');
             })
-            .error(function() {
+            .error(function(data) {
                 console.log('error');
             });
     };
 };
 
+var ResponseCtrl = function($scope) {
+    $scope.response = response;
+};
