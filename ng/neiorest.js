@@ -1,7 +1,7 @@
 
 'use strict';
 
-var app = angular.module('neioREST', ['ui.bootstrap', 'ngSanitize']);
+var app = angular.module('neioREST', ['ui.bootstrap', 'hljs', 'ngSanitize']);
 
 function defaultRequest() {
     return {
@@ -23,15 +23,21 @@ function defaultResponse() {
         content: '',
         preview: '',
         headers: [],
+        collapsed: true
     };
 }
 
 var response = defaultResponse();
 
 
-var RequestCtrl = function($scope, $http, $sanitize, $sce) {
+var neioRESTCtrl = function($scope, $http, $sanitize, $sce, $timeout) {
     $scope.request = request;
     $scope.response = response;
+    $scope.progress = {
+        value: 0,
+        type: 'primary',
+        collapsed: true
+    };
 
     $scope.setMethod = function(method) {
         $scope.request.method = method;
@@ -55,12 +61,27 @@ var RequestCtrl = function($scope, $http, $sanitize, $sce) {
         parameter.active = !parameter.active;
     }
 
+    $scope.finish = function() {
+        $timeout(function() {
+            $scope.progress.type = 'success';
+            $scope.progress.collapsed = true;
+            $scope.response.collapsed = false;
+        }, 500);
+        $timeout(function() {
+            $scope.progress.value = 0;
+            $scope.progress.type = 'primary';
+        }, 1000);
+    }
+
     $scope.query = function() {
+        $scope.progress.collapsed = false;
 
         angular.forEach($scope.request.parameters, function(entry, idx) {
             if (entry.active) {
                 var key = entry.key;
                 var val = entry.value;
+
+                $scope.progress.value = 25;
 
                 if ($scope.request.data[key]) {
                     var o = $scope.request.data[key];
@@ -72,29 +93,37 @@ var RequestCtrl = function($scope, $http, $sanitize, $sce) {
                 } else {
                     $scope.request.data[key] = val;
                 }
+                $scope.progress.value = 50;
             }
         });
 
-        console.log(request);
-
         $http.post('../api/query.php', request)
             .success(function(data) {
+                $scope.progress.value = 75;
+
                 $scope.response.content = data.content;
                 $scope.response.headers = [];
                 angular.forEach(data.headers, function(val, key) {
                     $scope.response.headers.push({'header': key, 'content': val});
                 });
-                //var content = $sanitize(data.content);
-                //var type = $sanitize(data.headers['content_type']);
-                //$sce.trustAsHtml($scope.response.preview);
-                $scope.response.preview = $sce.trustAsHtml('<iframe height="500px" class="col-xs-12" type"content" src="data:' + data.headers['content_type'] + ',' + encodeURIComponent(data.content) + '"></iframe>');
+
+                $scope.response.preview = $sce.trustAsHtml('<iframe height="500px" ' +
+                                                               'class="col-xs-12" ' +
+                                                               'type"content" ' +
+                                                               'src="data:' +
+                                                                    data.headers['content_type'] +
+                                                                    ',' +
+                                                                    encodeURIComponent(data.content) +
+                                                            '">' +
+                                                            '</iframe>');
+
+                $scope.progress.value = 100;
+                $scope.finish();
             })
             .error(function(data) {
-                console.log('error');
             });
-    };
-};
 
-var ResponseCtrl = function($scope) {
-    $scope.response = response;
+        $scope.finish();
+
+    };
 };

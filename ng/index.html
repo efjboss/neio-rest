@@ -1,19 +1,27 @@
 <!doctype html>
 <html ng-app="neioREST">
 <head>
+    <meta charset="utf-8"></meta>
+
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
-    <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.10.0.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular-sanitize.js"></script>
-    <script src="neiorest.js"></script>
+
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.10.0.js"></script>
+
+    <link rel="stylesheet" href="http://yandex.st/highlightjs/8.0/styles/default.min.css">
+    <script src="http://yandex.st/highlightjs/8.0/highlight.min.js"></script>
+    <script src="http://pc035860.github.io/angular-highlightjs/angular-highlightjs.min.js"></script>
+
     <link rel="stylesheet" href="neiorest.css">
+    <script src="neiorest.js"></script>
 
     <title>neioREST</title>
 </head>
-<body>
+<body ng-controller="neioRESTCtrl">
     <div class="container">
         <div class="">
-            <div class="row panel panel-default" ng-controller="RequestCtrl">
+            <div class="row panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Request</h3>
                 </div>
@@ -59,10 +67,10 @@
                                                 </button>
                                             </div>
                                             <div class="form-group col-xs-2">
-                                                <input type="text" ng-model="parameter.key" value="{{parameter.key}}" class="form-control input-sm"/>
+                                                <input type="text" ng-model="parameter.key" ng-disabled="!parameter.active" value="{{parameter.key}}" class="form-control input-sm"/>
                                             </div>
                                             <div class="form-group col-xs-7">
-                                                <input type="text" ng-model="parameter.value" value="{{parameter.value}}" class="form-control input-sm"/>
+                                                <input type="text" ng-model="parameter.value" ng-disabled="!parameter.active" value="{{parameter.value}}" class="form-control input-sm"/>
                                             </div>
                                             <div class="form-group col-xs-2">
                                                 <button ng-click="addParameter($index)" class="btn btn-sm btn-success">
@@ -86,15 +94,36 @@
                 </div>
             </div>
 
-            <div class="row panel panel-default" ng-controller="ResponseCtrl">
+            <div class="row panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">Response</h3>
                 </div>
 
                 <div class="panel-body">
                     <div class="col-md-12">
-                        <div class="row">
+                        <div collapse="progress.collapsed" class="row">
+                            <div class="col-md-6 col-md-offset-3">
+                                <progressbar type="{{progress.type}}"
+                                    class="progress-striped active"
+                                    value="progress.value">
+                                    processing...
+                                </progressbar>
+                            </div>
+                        </div>
+                        <div collapse="response.collapsed" class="row">
                             <tabset>
+                                <tab heading="Content">
+                                    <div class="panel-body">
+                                        <div hljs source="response.content">
+                                        </div>
+                                    </div>
+                                </tab>
+                                <tab heading="Preview">
+                                    <div class="panel-body">
+                                        <div ng-bind-html="response.preview">
+                                        </div>
+                                    </div>
+                                </tab>
                                 <tab heading="Headers">
                                     <div class="panel-body">
                                         <table class="table table-striped">
@@ -103,19 +132,6 @@
                                                 <td>{{header.content}}</td>
                                             </tr>
                                         </table>
-                                    </div>
-                                </tab>
-                                <tab heading="Response (raw)">
-                                    <div class="panel-body">
-                                        <pre>
-                                            {{response.content}}
-                                        </pre>
-                                    </div>
-                                </tab>
-                                <tab heading="Response (preview)">
-                                    <div class="panel-body">
-                                            <div ng-bind-html="response.preview">
-                                            </div>
                                     </div>
                                 </tab>
                             </tabset>

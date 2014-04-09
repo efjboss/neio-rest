@@ -4,3 +4,12 @@ iframe {
     border: none;
 }
 
+pre {
+    border: none;
+    white-space:pre-wrap;
+}
+
+input:disabled {
+    color: lightgrey;
+}
+

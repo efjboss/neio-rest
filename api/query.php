@@ -29,13 +29,11 @@ if ($data) {
 
     $res = curl_exec($ch);
 
-    //list($header, $content) = explode("\r\n\r\n", $res, 2);
     $content = $res;
     $headers = curl_getinfo($ch);
     $info = curl_getinfo($ch);
-    //$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
     curl_close($ch);
 
-    echo json_encode(['headers' => $headers, 'content' => $content, 'status' => 0, 'info' => $info]);
+    echo json_encode(['headers' => $headers, 'content' => $content, 'status' => 0]);
 }
