@@ -1,0 +1,106 @@
+<!doctype html>
+<html ng-app="neioREST">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+    <script src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.10.0.js"></script>
+    <script src="neiorest.js"></script>
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="neiorest.css">
+
+    <title>neioREST</title>
+</head>
+<body>
+    <div class="container">
+        <div class="">
+            <div class="row panel panel-default" ng-controller="RequestCtrl">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Request</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="col-md-12">
+
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-btn">
+                                    <button class="btn btn-default dropdown-toggle">
+                                        {{request.method}} <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <li ng-repeat="method in request.methods">
+                                            <a ng-click="setMethod(method)">{{method}}</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <input type="text" ng-model="request.url" name="requestUrl" placeholder="url" class="form-control" />
+                                <div class="input-group-btn">
+                                    <button ng-click="query()" class="btn btn-primary">
+                                        <span class="glyphicon glyphicon-send">
+                                            Send
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <tabset>
+                            <tab heading="Parameters">
+                                <div class="panel-body col-md-12">
+                                    <div class="form-group">
+                                        <label class="col-xs-1">state</label>
+                                        <label class="col-xs-2">key</label>
+                                        <label class="col-xs-9">value</label>
+                                    </div>
+                                    <div ng-repeat="parameter in request.parameters" class="">
+                                            <div class="form-group col-xs-1">
+                                                <button ng-click="toggleActive(parameter)" class="btn btn-sm" ng-class="{'btn-info': parameter.active, 'btn-warning': !parameter.active}">
+                                                    <span class="glyphicon" ng-class="{'glyphicon-eye-open': parameter.active, 'glyphicon-eye-close': !parameter.active}"></span>
+                                                </button>
+                                            </div>
+                                            <div class="form-group col-xs-2">
+                                                <input type="text" ng-model="parameter.key" value="{{parameter.key}}" class="form-control input-sm"/>
+                                            </div>
+                                            <div class="form-group col-xs-7">
+                                                <input type="text" ng-model="parameter.value" value="{{parameter.value}}" class="form-control input-sm"/>
+                                            </div>
+                                            <div class="form-group col-xs-2">
+                                                <button ng-click="addParameter($index)" class="btn btn-sm btn-success">
+                                                    <span class="glyphicon glyphicon-plus"></span>
+                                                </button>
+                                                <button ng-click="removeParameter($index, parameter)" class="btn btn-sm btn-danger">
+                                                    <span class="glyphicon glyphicon-minus"></span>
+                                                </button>
+                                            </div>
+                                    </div>
+                                </div>
+                            </tab>
+                            <tab heading="Headers">
+                                <div class="panel-body">
+                                    bar
+                                </div>
+                            </tab>
+                            </tabset>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Response</h3>
+                </div>
+
+                <div class="panel-body">
+                    <div class="col-md-12">
+                        <div class="row">
+                            foo
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+        </div>
+    </div>
+</body>
+</html>
