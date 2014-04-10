@@ -87,7 +87,7 @@ var neioRESTCtrl = function($scope, $http, $sanitize, $sce, $timeout) {
         $scope.request.name = template.name;
         $scope.request.method = template.method;
         $scope.request.url = template.url;
-        $scope.request.parameter = template.parameter;
+        $scope.request.parameters = template.parameters;
 
         $scope.templatePreview = null;
     }
@@ -96,7 +96,6 @@ var neioRESTCtrl = function($scope, $http, $sanitize, $sce, $timeout) {
         $scope.request.name = name;
         $http.post('../api/save.php', request)
             .success(function(data) {
-                console.log(data);
                 if (data.status == 'success') {
                     $scope.templates.push(data.data);
                     $scope.inform('Template saved');
@@ -145,8 +144,9 @@ var neioRESTCtrl = function($scope, $http, $sanitize, $sce, $timeout) {
 
     $scope.query = function() {
         $scope.progress.collapsed = false;
+        $scope.response = defaultResponse();
 
-        $scope.request.data = {};
+        var requestParams = {};
 
         angular.forEach($scope.request.parameters, function(entry, idx) {
             if (entry.active) {
@@ -155,21 +155,28 @@ var neioRESTCtrl = function($scope, $http, $sanitize, $sce, $timeout) {
 
                 $scope.progress.value = 25;
 
-                if ($scope.request.data[key]) {
-                    var o = $scope.request.data[key];
+                if (requestParams[key]) {
+                    var o = requestParams[key];
                     if (Array.isArray(o)) {
                         o.push(val);
                     } else {
                         o = [o, val];
                     }
                 } else {
-                    $scope.request.data[key] = val;
+                    requestParams[key] = val;
                 }
                 $scope.progress.value = 50;
             }
         });
 
-        $http.post('../api/query.php', request)
+        var requestData = {
+            name: $scope.request.name,
+            method: $scope.request.method,
+            url: $scope.request.url,
+            data: requestParams
+        };
+
+        $http.post('../api/query.php', requestData)
             .success(function(data) {
                 $scope.progress.value = 75;
 
@@ -189,18 +196,12 @@ var neioRESTCtrl = function($scope, $http, $sanitize, $sce, $timeout) {
                                                             '">' +
                                                             '</iframe>');
 
-                $scope.request.data = {};
-
                 $scope.progress.value = 100;
                 $scope.finish();
             })
             .error(function(data) {
+                $scope.finish();
             });
-
-        delete $scope.request.data;
-
-        $scope.finish();
-
     };
 
     $http.get('../api/list.php')
