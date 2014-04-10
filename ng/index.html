@@ -40,6 +40,12 @@
                     </li>
                 </ul>
             </div>
+            <div collapse="!templatePreview" class="panel-footer">
+                <h3 class="panel-title">Preview</h3>
+                <div hljs source="templatePreview | json" class="col-md-12">
+                </div>
+                <button ng-click="loadTemplate(templatePreview)" type="button" class="btn btn-primary">Load template</button>
+            </div>
         </div>
 
         <div class="row panel panel-default">
@@ -63,7 +69,7 @@
                                     {{request.method}} <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li ng-repeat="method in request.methods">
+                                    <li ng-repeat="method in methods">
                                         <a ng-click="setMethod(method)">{{method}}</a>
                                     </li>
                                 </ul>

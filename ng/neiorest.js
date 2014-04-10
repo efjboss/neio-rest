@@ -6,7 +6,7 @@ var app = angular.module('neioREST', ['ui.bootstrap', 'hljs', 'ngSanitize']);
 function defaultRequest() {
     return {
         name: '',
-        methods: ['GET', 'POST', 'HEAD', 'PUT', 'DELETE'],
+        //methods: ['GET', 'POST', 'HEAD', 'PUT', 'DELETE'],
         method:'GET',
         url:'',
         parameters: [
@@ -38,6 +38,7 @@ function defaultMessage() {
 }
 
 var neioRESTCtrl = function($scope, $http, $sanitize, $sce, $timeout) {
+    $scope.methods = ['GET', 'POST', 'HEAD', 'PUT', 'DELETE'];
     $scope.request = request;
     $scope.response = response;
     $scope.progress = {
@@ -47,6 +48,7 @@ var neioRESTCtrl = function($scope, $http, $sanitize, $sce, $timeout) {
     };
     $scope.messages = [];
     $scope.templates = [];
+    $scope.templatePreview = null;
 
     $scope.warn = function(message) {
         $scope.messages.push({content: message, type: 'danger'});
@@ -82,6 +84,14 @@ var neioRESTCtrl = function($scope, $http, $sanitize, $sce, $timeout) {
         parameter.active = !parameter.active;
     }
 
+    $scope.loadTemplate = function(template) {
+        $scope.request.name = template.name;
+        $scope.request.method = template.method;
+        $scope.request.url = template.url;
+        $scope.request.parameter = template.parameter;
+        $scope.request.data = template.data;
+    }
+
     $scope.addTemplate = function(name) {
         $scope.request.name = name;
         $http.post('../api/save.php', request)
@@ -105,6 +115,9 @@ var neioRESTCtrl = function($scope, $http, $sanitize, $sce, $timeout) {
                 if (data['status'] == 'success') {
                     $scope.inform(data['message']);
                     $scope.templates.splice(index, 1);
+                    if (template.name == $scope.templatePreview.name) {
+                        $scope.templatePreview = null;
+                    }
                 } else {
                     $scope.warn(data['message'])
                 }
@@ -115,6 +128,7 @@ var neioRESTCtrl = function($scope, $http, $sanitize, $sce, $timeout) {
     };
 
     $scope.previewTemplate = function(index, template) {
+        $scope.templatePreview = template;
     };
 
     $scope.finish = function() {
