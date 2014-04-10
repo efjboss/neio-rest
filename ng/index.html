@@ -20,15 +20,9 @@
 </head>
 <body ng-controller="neioRESTCtrl">
     <div class="container">
-        <div ng-repeat="message in messages" class="row panel" ng-class="'panel-' + message.type">
-            <div class="panel-heading">
-                <button ng-click="closeMessage($index)" type="button" class="close" aria-hidden="true">&times;</button>
-                <h3 class="panel-title">{{message.type}}</h3>
-            </div>
-            <div class="panel-body">
-                {{message.content}}
-            </div>
-        </div>
+        <alert ng-repeat="message in messages" type="message.type" close="closeMessage($index)">
+            <strong>{{message.type}}: </strong>{{message.content}}
+        </alert>
 
         <div class="row panel panel-default">
             <div class="panel-heading">
@@ -39,13 +33,12 @@
                 </div>
             </div>
             <div class="panel-body">
-                <div class="col-md-12">
-                    <ul class="list-inline">
-                        <li ng-repeat="template in templates | filter:templateFilter">
-                            <a href="#">{{template.name}}</a>
-                        </li>
-                    </ul>
-                </div>
+                <ul class="list-inline col-md-12">
+                    <li ng-repeat="template in templates | filter:templateFilter">
+                        <a ng-click="previewTemplate($index, template)" href="#">{{template.name}}</a>
+                        <button ng-click="deleteTemplate($index,template)" type="button" class="close" aria-hidden="true">&times;</button>
+                    </li>
+                </ul>
             </div>
         </div>
 

@@ -97,7 +97,25 @@ var neioRESTCtrl = function($scope, $http, $sanitize, $sce, $timeout) {
             .error(function(data) {
                 $scope.warn('Template could not be saved');
             });
-    }
+    };
+
+    $scope.deleteTemplate = function(index, template) {
+        $http.post('../api/delete.php', template)
+            .success(function(data) {
+                if (data['status'] == 'success') {
+                    $scope.inform(data['message']);
+                    $scope.templates.splice(index, 1);
+                } else {
+                    $scope.warn(data['message'])
+                }
+            })
+            .error(function(data) {
+                $scope.warn('Error in deleting template');
+            });
+    };
+
+    $scope.previewTemplate = function(index, template) {
+    };
 
     $scope.finish = function() {
         $timeout(function() {
@@ -109,7 +127,7 @@ var neioRESTCtrl = function($scope, $http, $sanitize, $sce, $timeout) {
             $scope.progress.value = 0;
             $scope.progress.type = 'primary';
         }, 1000);
-    }
+    };
 
     $scope.query = function() {
         $scope.progress.collapsed = false;
