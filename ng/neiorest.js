@@ -145,6 +145,7 @@ var neioRESTCtrl = function($scope, $http, $sanitize, $sce, $timeout) {
     $scope.query = function() {
         $scope.progress.collapsed = false;
         $scope.response = defaultResponse();
+        $scope.responseIsJson = false;
 
         var requestParams = {};
 
@@ -180,11 +181,17 @@ var neioRESTCtrl = function($scope, $http, $sanitize, $sce, $timeout) {
             .success(function(data) {
                 $scope.progress.value = 75;
 
-                $scope.response.content = data.content;
                 $scope.response.headers = [];
+
                 angular.forEach(data.headers, function(val, key) {
                     $scope.response.headers.push({'header': key, 'content': val});
                 });
+                if (data.headers.content_type.match('application/json')) {
+                    $scope.responseIsJson = true;
+                    $scope.response.content = angular.fromJson(data.content);
+                } else {
+                    $scope.response.content = data.content;
+                }
 
                 $scope.response.preview = $sce.trustAsHtml('<iframe height="500px" ' +
                                                                'class="col-xs-12" ' +

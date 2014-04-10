@@ -148,7 +148,9 @@
                         <tabset>
                         <tab heading="Content">
                         <div class="panel-body">
-                            <div hljs source="response.content">
+                            <div ng-if="responseIsJson" hljs source="response.content | json">
+                            </div>
+                            <div ng-if="!responseIsJson" hljs source="response.content">
                             </div>
                         </div>
                         </tab>
