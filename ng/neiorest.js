@@ -12,7 +12,6 @@ function defaultRequest() {
         parameters: [
             {key: '', value: '', active: true}
         ],
-        data: {},
     };
 }
 
@@ -89,7 +88,8 @@ var neioRESTCtrl = function($scope, $http, $sanitize, $sce, $timeout) {
         $scope.request.method = template.method;
         $scope.request.url = template.url;
         $scope.request.parameter = template.parameter;
-        $scope.request.data = template.data;
+
+        $scope.templatePreview = null;
     }
 
     $scope.addTemplate = function(name) {
@@ -115,7 +115,7 @@ var neioRESTCtrl = function($scope, $http, $sanitize, $sce, $timeout) {
                 if (data['status'] == 'success') {
                     $scope.inform(data['message']);
                     $scope.templates.splice(index, 1);
-                    if (template.name == $scope.templatePreview.name) {
+                    if ($scope.templatePreview && template.name == $scope.templatePreview.name) {
                         $scope.templatePreview = null;
                     }
                 } else {
@@ -196,6 +196,8 @@ var neioRESTCtrl = function($scope, $http, $sanitize, $sce, $timeout) {
             })
             .error(function(data) {
             });
+
+        delete $scope.request.data;
 
         $scope.finish();
 
