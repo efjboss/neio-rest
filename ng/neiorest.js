@@ -6,7 +6,6 @@ var app = angular.module('neioREST', ['ui.bootstrap', 'hljs', 'ngSanitize']);
 function defaultRequest() {
     return {
         name: '',
-        //methods: ['GET', 'POST', 'HEAD', 'PUT', 'DELETE'],
         method:'GET',
         url:'',
         parameters: [
