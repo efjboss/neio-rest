@@ -118,9 +118,34 @@
                         </div>
                         </tab>
                         <tab heading="Headers">
-                        <div class="panel-body">
-                            bar
-                        </div>
+                            <div class="panel-body col-md-12">
+                                <div class="form-group">
+                                    <label class="col-xs-1">state</label>
+                                    <label class="col-xs-2">header</label>
+                                    <label class="col-xs-9">content</label>
+                                </div>
+                                <div ng-repeat="header in request.headers" class="">
+                                    <div class="form-group col-xs-1">
+                                        <button ng-click="toggleActive(header)" class="btn btn-sm" ng-class="{'btn-info': header.active, 'btn-warning': !header.active}">
+                                            <span class="glyphicon" ng-class="{'glyphicon-eye-open': header.active, 'glyphicon-eye-close': !header.active}"></span>
+                                        </button>
+                                    </div>
+                                    <div class="form-group col-xs-2">
+                                        <input type="text" ng-model="header.key" ng-disabled="!header.active" value="{{header.key}}" class="form-control input-sm"/>
+                                    </div>
+                                    <div class="form-group col-xs-7">
+                                        <input type="text" ng-model="header.value" ng-disabled="!header.active" value="{{header.value}}" class="form-control input-sm"/>
+                                    </div>
+                                    <div class="form-group col-xs-2">
+                                        <button ng-click="addHeader($index)" class="btn btn-sm btn-success">
+                                            <span class="glyphicon glyphicon-plus"></span>
+                                        </button>
+                                        <button ng-click="removeHeader($index, header)" class="btn btn-sm btn-danger">
+                                            <span class="glyphicon glyphicon-minus"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </tab>
                         </tabset>
                     </div>

@@ -1,4 +1,3 @@
-
 'use strict';
 
 var app = angular.module('neioREST', ['ui.bootstrap', 'hljs', 'ngSanitize']);
@@ -11,6 +10,9 @@ function defaultRequest() {
         parameters: [
             {key: '', value: '', active: true}
         ],
+        headers: [
+            {key: '', value: '', active: true}
+        ]
     };
 }
 
@@ -78,6 +80,21 @@ var neioRESTCtrl = function($scope, $http, $sanitize, $sce, $timeout) {
         }
     }
 
+    $scope.addHeader = function(index, header) {
+        $scope.request.headers.splice(index + 1, 0, {'key': '', 'value': '', 'active': true});
+    };
+
+    $scope.removeHeader = function(index, header) {
+        if ($scope.request.headers.length == 1) {
+            parameter.key = '';
+            parameter.value = '';
+            parameter.active = true;
+        } else {
+            $scope.request.headers.splice(index, 1);
+        }
+    }
+
+
     $scope.toggleActive = function(parameter) {
         parameter.active = !parameter.active;
     }
@@ -87,6 +104,7 @@ var neioRESTCtrl = function($scope, $http, $sanitize, $sce, $timeout) {
         $scope.request.method = template.method;
         $scope.request.url = template.url;
         $scope.request.parameters = template.parameters;
+        $scope.request.headers = template.headers || [{'key': '', 'value': '', 'active': true}];
 
         $scope.templatePreview = null;
     }
@@ -147,6 +165,17 @@ var neioRESTCtrl = function($scope, $http, $sanitize, $sce, $timeout) {
         $scope.responseIsJson = false;
 
         var requestParams = {};
+        var requestHeaders = [];
+
+        angular.forEach($scope.request.headers, function(entry, idx) {
+            if (entry.active) {
+                if (entry.key.match(/:$/)) {
+                    requestHeaders.push(entry.key + ' ' + entry.value);
+                } else {
+                    requestHeaders.push(entry.key + ': ' + entry.value);
+                }
+            }
+        });
 
         angular.forEach($scope.request.parameters, function(entry, idx) {
             if (entry.active) {
@@ -173,6 +202,7 @@ var neioRESTCtrl = function($scope, $http, $sanitize, $sce, $timeout) {
             name: $scope.request.name,
             method: $scope.request.method,
             url: $scope.request.url,
+            headers: requestHeaders,
             data: requestParams
         };
 
