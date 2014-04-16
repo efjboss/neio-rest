@@ -13,3 +13,118 @@ input:disabled {
     color: lightgrey;
 }
 
+body {
+    background: #0a0a0a;
+    color: lightgrey;
+}
+
+.panel-default {
+    background: #111;
+    border-color: #333;
+}
+
+.panel-default > .panel-heading,
+.panel-default > .panel-footer {
+    background: #222;
+    color: lightgrey;
+}
+
+.btn-default {
+    background: #333;
+    color: lightgrey;
+    border-color: #555;
+    transition: color 0.15s ease-in-out 0s;
+}
+
+.btn-default:hover,
+.btn-default:focus,
+.btn-default:active,
+.btn-default.active,
+.open .dropdown-toggle.btn-default {
+    background: #333;
+    color: #66AFE9;
+    transition: color 0.15s ease-in-out 0s;
+    border-color: #555;
+}
+
+.dropdown-menu {
+    background: #333;
+}
+
+.dropdown-menu > li > a {
+    color: lightgrey;
+    cursor: pointer;
+    transition: color 0.15s ease-in-out 0s;
+}
+
+.dropdown-menu > li > a:hover {
+    background: none;
+    color: #66AFE9;
+}
+
+.form-control {
+    background: #444;
+    border-color: #555;
+    color: lightgrey;
+}
+
+.form-control:disabled {
+    background: #111;
+    color: #555;
+}
+
+.panel > .panel-heading,
+.panel > .panel-footer,
+.nav-tabs {
+    border-color: #555;
+}
+
+.nav-tabs > li.active > a,
+.nav-tabs > li > a:focus,
+.nav-tabs > li > a:hover,
+.nav-tabs > li.active > a:focus,
+.nav-tabs > li.active > a:hover {
+    background: #444;
+    color: lightgrey;
+    border-color: #555;
+}
+
+.table-striped > tbody > tr:nth-child(2n+1) > td,
+.table-striped > tbody > tr:nth-child(2n+1) > th {
+    background: #222;
+}
+
+.table > thead > tr > th,
+.table > tbody > tr > th,
+.table > tfoot > tr > th,
+.table > thead > tr > td,
+.table > tbody > tr > td,
+.table > tfoot > tr > td {
+    border-color: #555;
+}
+
+pre {
+    background: #333;
+}
+
+button.close,
+button.close:hover {
+    color: #aaa;
+    padding-left: 5px;
+}
+
+.list-inline > li {
+    border: 1px solid #222;
+    border-radius: 5px;
+    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+}
+
+.list-inline > li:hover {
+    border-color: #66AFE9;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(102, 175, 233, 0.6);
+}
+
+.list-inline > li > a {
+    text-decoration: none;
+}

@@ -17,8 +17,10 @@ if ($data) {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_HEADER, 0);
     curl_setopt($ch, CURLOPT_HTTPHEADER, $requestHeaders);
-    //curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-    //curl_setopt($ch, CURLOPT_MAXREDIRS, 5);
+    if (!ini_get('open_basedir')) {
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+        curl_setopt($ch, CURLOPT_MAXREDIRS, 5);
+    }
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
 

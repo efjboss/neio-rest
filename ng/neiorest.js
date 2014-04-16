@@ -39,6 +39,15 @@ function defaultMessage() {
 
 var neioRESTCtrl = function($scope, $http, $sanitize, $sce, $timeout) {
     $scope.methods = ['GET', 'POST', 'HEAD', 'PUT', 'DELETE'];
+    $scope.httpHeaders = [
+        'Accept',
+        'Accept-Charset',
+        'Accept-Encoding',
+        'Accept-Language',
+        'Accept-Datetime'
+    ];
+
+
     $scope.request = request;
     $scope.response = response;
     $scope.progress = {
