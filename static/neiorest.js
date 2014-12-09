@@ -1,5 +1,6 @@
 $(function() {
     initHandlers();
+    $('.responsecontainer > .panel-body').toggle();
 
     $('.templatesave').click(function(e) {
         var name = $(e.target).closest('.templatesavecontainer').find('input[name="templateName"]').val();
@@ -127,6 +128,7 @@ function showResponse(data) {
         var response = JSON.stringify(JSON.parse(response), null, 2);
     }
     $('.response').html(response);
+    $('.response').closest('.panel-body').show();
     $('.responseStatus').html(data['status_code']);
 
     $('pre code').each(function(i, block) {
