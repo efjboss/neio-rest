@@ -1,0 +1,12 @@
+pre {
+    border: none;
+    background-color: white;
+}
+
+code.hljs {
+    background-color: white;
+}
+
+.panelmin:hover {
+    cursor: pointer;
+}

@@ -1,0 +1,46 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<div class="panel-group">
+    <div class="requestcontainer panel panel-default">
+        <div class="panel-heading">
+            <h3 class="col-sm-2 panel-title">
+                <span class="panelmin glyphicon glyphicon-minus"></span>
+                Request (<a href="/reset">clear</a>)
+            </h3>
+            <div class="templateselect form-group col-sm-2 col-sm-offset-6">
+                <select name="templateSelected" class="form-control input-sm">
+                    <option value="">- Select a template -</option>
+                    {% for template in templates %}
+                    <option value="{{ template.name }}">{{template.name}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="templatesavecontainer input-group col-sm-2 col-sm-offset-10">
+                <input name="templateName" type="text" class="form-control input-sm" />
+                <div class="input-group-btn">
+                    <button class="templatesave btn btn-default btn-sm">save</button>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body">
+            {% include "request.html" with context %}
+       </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                <span class="panelmin glyphicon glyphicon-minus"></span>
+                Response
+            </h3>
+        </div>
+        <div class="panel-body">
+            <pre>
+    <code class="response"></code>
+            </pre>
+        </div>
+    </div>
+</div>
+{% endblock %}
