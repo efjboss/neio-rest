@@ -8,8 +8,7 @@ $(function() {
         data = form.serializeArray();
         data.push({name: 'templateName', value: name});
 
-        console.log(data);
-
+        $(e.target).button('loading');
         $.ajax({
             method: 'POST',
             url: '/save',
@@ -17,10 +16,12 @@ $(function() {
             success: function (data) {
                 console.log('success');
                 console.log(data);
+                $(e.target).button('reset');
             },
             error: function (data) {
                 console.log('error');
                 console.log(data);
+                $(e.target).button('reset');
             }
         });
 
@@ -76,6 +77,7 @@ function initHandlers() {
         $.ajax({
             url: '/query',
             method: 'POST',
+            dataType: 'json',
             data: data,
             success: function (data) {
                 showResponse(data);
@@ -113,15 +115,19 @@ function initHandlers() {
     $('.methodselect > ul > li > a').click(function (e) {
         var method = $(e.target).html().toLowerCase();
         console.log(method);
-        $(e.target).closest('.form-group').find('input[name="queryMethod"]').val(method);
+        $(e.target).closest('.requestcontainer').find('input[name="requestMethod"]').val(method);
+        $(e.target).closest('.requestcontainer').find('.currentMethod').html(method.toUpperCase());
     });
 
 }
 
 function showResponse(data) {
-    console.log(response);
-    var response = JSON.stringify(JSON.parse(data), null, 2);
+    var response = data['content'];
+    if (data['headers']['Content-Type'].match(/^application\/json/)) {
+        var response = JSON.stringify(JSON.parse(response), null, 2);
+    }
     $('.response').html(response);
+    $('.responseStatus').html(data['status_code']);
 
     $('pre code').each(function(i, block) {
         hljs.highlightBlock(block);

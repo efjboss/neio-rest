@@ -1,4 +1,11 @@
-from flask import Flask, render_template, request, session, json, g, redirect
+from flask import Flask,\
+        render_template,\
+        request,\
+        session,\
+        json,\
+        g,\
+        redirect,\
+        jsonify
 import requests
 import sqlite3
 import config
@@ -173,7 +180,12 @@ def query():
     print(str(req))
     session['request'] = str(req)
 
-    return resp.text
+    headers = {k: resp.headers[k] for k in resp.headers}
+    return jsonify(
+        content = resp.text,
+        status_code = resp.status_code,
+        headers = headers,
+    )
 
 if __name__ == "__main__":
     app.config.from_object(config.__name__)

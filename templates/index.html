@@ -9,7 +9,7 @@
                 <span class="panelmin glyphicon glyphicon-minus"></span>
                 Request (<a href="/reset">clear</a>)
             </h3>
-            <div class="templateselect form-group col-sm-2 col-sm-offset-6">
+            <div class="templateselect form-group col-sm-3 col-sm-offset-4">
                 <select name="templateSelected" class="form-control input-sm">
                     <option value="">- Select a template -</option>
                     {% for template in templates %}
@@ -17,10 +17,10 @@
                     {% endfor %}
                 </select>
             </div>
-            <div class="templatesavecontainer input-group col-sm-2 col-sm-offset-10">
+            <div class="templatesavecontainer input-group col-sm-3 col-sm-offset-9">
                 <input name="templateName" type="text" class="form-control input-sm" />
                 <div class="input-group-btn">
-                    <button class="templatesave btn btn-default btn-sm">save</button>
+                    <button data-loading-text="Saving..." class="templatesave btn btn-default btn-sm">save</button>
                 </div>
             </div>
         </div>
@@ -34,6 +34,7 @@
             <h3 class="panel-title">
                 <span class="panelmin glyphicon glyphicon-minus"></span>
                 Response
+                <span class="badge responseStatus"></span>
             </h3>
         </div>
         <div class="panel-body">

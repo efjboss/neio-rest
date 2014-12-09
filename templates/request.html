@@ -7,7 +7,7 @@
         <div class="input-group">
             <div class="input-group-btn methodselect">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    {{ request.method|upper }} <span class="caret"></span>
+                    <span class="currentMethod">{{ request.method|upper }}</span> <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu">
                     <li><a href="#">GET</a></li>
@@ -40,9 +40,11 @@
         </div>
         <div class="col-sm-2">
             <input name="requestActives" {{ 'checked' if parameter.active else '' }} class="parameterchk" type="checkbox" style="display: none"/>
-            <button  class="parametervis btn btn-default btn-sm"><span class="glyphicon glyphicon-ok"></span></button>
-            <button  class="parameteradd btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span></button>
-            <button  class="parameterrem btn btn-warning btn-sm"><span class="glyphicon glyphicon-minus"></span></button>
+            <div class="btn-group" role="group">
+                <button class="parametervis btn btn-default btn-sm"><span class="glyphicon glyphicon-ok"></span></button>
+                <button class="parameteradd btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span></button>
+                <button class="parameterrem btn btn-warning btn-sm"><span class="glyphicon glyphicon-minus"></span></button>
+            </div>
         </div>
     </div>
     {% endfor %}
