@@ -39,15 +39,12 @@ $(function() {
 
 function initHandlers(container) {
     $('.requestform', container).submit(function (e) {
-        console.log('hello');
         e.preventDefault()
         var form = $(e.target);
         var data = form.serializeAll();
         var btn = $(e.target).find('button[type="submit"]');
 
         btn.button('loading');
-
-        console.log(data);
 
         $.ajax({
             url: '/query',
@@ -87,7 +84,6 @@ function initHandlers(container) {
 
     $('.methodselect > ul > li > a', container).click(function (e) {
         var method = $(e.target).html().toLowerCase();
-        console.log(method);
         $(e.target).closest('.requestcontainer').find('input[name="requestMethod"]').val(method);
         $(e.target).closest('.requestcontainer').find('.currentMethod').html(method.toUpperCase());
     });
@@ -108,13 +104,9 @@ function initHandlers(container) {
             url: '/save',
             data: data,
             success: function (data) {
-                console.log('success');
-                console.log(data);
                 $(e.target).button('reset');
             },
             error: function (data) {
-                console.log('error');
-                console.log(data);
                 $(e.target).button('reset');
             }
         });
@@ -125,23 +117,17 @@ function initHandlers(container) {
     $('.templateselect > select', container).change(function (e) {
         e.preventDefault();
         var name = $(e.target).val();
-        console.log(name);
 
         if (name == '') {
-            console.log('None selected');
         } else {
-            console.log(name);
             $.ajax({
                 url: '/load',
                 method: 'POST',
                 data: 'templateName=' + name,
                 success: function (data) {
-                    console.log('success');
                     var queueitem = container.closest('.queuecontainer');
-                    console.log(queueitem);
                     $(e.target).closest('.requestcontainer').replaceWith(data);
                     var newcontainer = $('.requestcontainer', queueitem);
-                    console.log(newcontainer);
                     initHandlers(newcontainer);
                     $('input[name="templateName"]', newcontainer).val(name);
                 },
