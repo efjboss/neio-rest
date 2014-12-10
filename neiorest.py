@@ -13,8 +13,9 @@ import config
 app = Flask(__name__)
 
 class Template(object):
-    def __init__(self, name, req = None):
+    def __init__(self, name, mode='form', req = None):
         self.name = name
+        self.mode = mode
         self.request = req
 
     def export(self):
@@ -31,8 +32,7 @@ class Request(object):
         obj = Request()
         obj.url = url
         obj.method = method.lower()
-        obj.parameters = [Parameter(k, v, a) for k, v, a in zip(keys, values,
-            actives)]
+        obj.parameters = [Parameter(k, v, a) for k, v, a in zip(keys, values, [a == "true" for a in actives])]
 
         return obj
 
@@ -109,18 +109,18 @@ def teardown_db(exception):
         db.close()
 
 def get_templates():
-    return [Template(row['name'], Request.fromJson(row['data'])) for row in query_db('select * from `templates`')]
+    return [Template(row['name'], 'form', Request.fromJson(row['data'])) for row in query_db('select * from `templates`')]
 
 def get_template(name):
     print(name);
     row = query_db('SELECT * FROM `templates` WHERE `name` = ?', [name], one=True)
-    return Template(row['name'], Request.fromJson(row['data']))
+    return Template(row['name'], 'form', Request.fromJson(row['data']))
 
 def save_template(template):
     print('saving template')
     data = template.export()
     db = get_db()
-    db.execute('INSERT OR REPLACE INTO `templates` (`name`, `data`) VALUES (?, ?)', (template.name, data))
+    db.execute('INSERT OR REPLACE INTO `templates` (`name`, `mode`, `data`) VALUES (?, ?)', (template.name, template.mode, data))
     db.commit()
 
 
@@ -143,6 +143,7 @@ def reset():
 @app.route("/")
 def index():
     return render_template('index.html',
+            mode='form',
             request=load_request(),
             templates=get_templates())
 
@@ -165,7 +166,7 @@ def save():
 
     name = request.form.get('templateName', '', type=str)
 
-    t = Template(name, req)
+    t = Template(name, 'form', req)
     res = save_template(t)
 
     session['request'] = str(req)
@@ -174,6 +175,7 @@ def save():
 
 @app.route("/query", methods=['POST'])
 def query():
+    print(request.form);
     req = request_from_form(request)
     resp = req.query();
 

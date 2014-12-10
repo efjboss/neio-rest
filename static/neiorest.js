@@ -58,10 +58,16 @@ $(function() {
 
 (function ($) {
       $.fn.serializeAll = function () {
-        var data = $(this).serializeArray();
+        var data = [];
 
-        $(':disabled[name]', this).each(function () { 
-            data.push({ name: this.name, value: $(this).val() });
+        $('[name]', this).each(function () {
+            var name = this.name;
+            var value = $(this).val();
+
+            if (this.type == 'checkbox') {
+                value = $(this).prop('checked');
+            }
+            data.push({ name: name, value: value });
         });
 
         return data;
@@ -74,6 +80,8 @@ function initHandlers() {
         var data = form.serializeAll();
         var btn = $(e.target).find('button[type="submit"]');
         btn.button('loading');
+
+        console.log(data);
 
         $.ajax({
             url: '/query',
@@ -107,6 +115,10 @@ function initHandlers() {
         toggleParameter(e);
     });
 
+    $('.parameterarea').click(function (e) {
+        toggleParameterArea(e);
+    });
+
     $('.panelmin').click(function (e) {
         var panel = $(e.target).closest('.panel');
         panel.find('.panel-body').toggle();
@@ -120,6 +132,7 @@ function initHandlers() {
         $(e.target).closest('.requestcontainer').find('.currentMethod').html(method.toUpperCase());
     });
 
+    $('.requestRaw').ace({theme: 'github', lang: 'json'});
 }
 
 function showResponse(data) {
@@ -144,6 +157,12 @@ function addParameter(e) {
     copy.find('.parameteradd').click(addParameter);
     copy.find('.parameterrem').click(removeParameter);
     copy.find('.parametervis').click(toggleParameter);
+
+    e.preventDefault();
+}
+
+function toggleParameterArea(e) {
+    var valueInput = $(e.target).closest('.form-group').find('[name="requestValues"]');
 
     e.preventDefault();
 }
