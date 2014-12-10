@@ -1,8 +1,101 @@
 $(function() {
-    initHandlers();
-    $('.responsecontainer > .panel-body').toggle();
+    $('.responsecontainer').each(function () {
+        var container = $(this);
 
-    $('.templatesave').click(function(e) {
+        $('.panel-body', container).hide();
+
+        $('.panelmin', container).click(function (e) {
+            var panel = $(e.target).closest('.panel');
+            panel.find('.panel-body').toggle();
+            e.preventDefault()
+        });
+    });
+
+    $('.requestcontainer').each(function () {
+        var container = $(this);
+        $('.panel-body', container).show();
+        initHandlers(container);
+
+    });
+});
+
+(function ($) {
+      $.fn.serializeAll = function () {
+        var data = [];
+
+        $('[name]', this).each(function () {
+            var name = this.name;
+            var value = $(this).val();
+
+            if (this.type == 'checkbox') {
+                value = $(this).prop('checked');
+            }
+            data.push({ name: name, value: value });
+        });
+
+        return data;
+      }
+    })(jQuery);
+
+function initHandlers(container) {
+    $('.requestform', container).submit(function (e) {
+        console.log('hello');
+        e.preventDefault()
+        var form = $(e.target);
+        var data = form.serializeAll();
+        var btn = $(e.target).find('button[type="submit"]');
+
+        btn.button('loading');
+
+        console.log(data);
+
+        $.ajax({
+            url: '/query',
+            method: 'POST',
+            dataType: 'json',
+            data: data,
+            success: function (data) {
+                showResponse(container, data);
+                btn.button('reset');
+            },
+            error: function (data) {
+                showResponse(container, data);
+                btn.button('reset');
+            },
+        });
+    });
+
+    $('.parameteradd', container).click(function(e) {
+        addParameter(e);
+    });
+    $('.parameterrem', container).click(function(e) {
+        removeParameter(e);
+    });
+    $('.parametervis', container).click(function(e) {
+        toggleParameter(e);
+    });
+
+    $('.parameterarea', container).click(function (e) {
+        toggleParameterArea(e);
+    });
+
+    $('.panelmin', container).click(function (e) {
+        var panel = $(e.target).closest('.panel');
+        panel.find('.panel-body').toggle();
+        e.preventDefault()
+    });
+
+    $('.methodselect > ul > li > a', container).click(function (e) {
+        var method = $(e.target).html().toLowerCase();
+        console.log(method);
+        $(e.target).closest('.requestcontainer').find('input[name="requestMethod"]').val(method);
+        $(e.target).closest('.requestcontainer').find('.currentMethod').html(method.toUpperCase());
+    });
+
+    $('.requestRaw', container).ace({theme: 'github', lang: 'json'});
+
+    $('.templatesave', container).click(function(e) {
+        e.preventDefault();
         var name = $(e.target).closest('.templatesavecontainer').find('input[name="templateName"]').val();
         var form = $(e.target).closest('.requestcontainer').find('.requestform');
 
@@ -29,8 +122,10 @@ $(function() {
         e.preventDefault();
     });
 
-    $('.templateselect > select').change(function (e) {
+    $('.templateselect > select', container).change(function (e) {
+        e.preventDefault();
         var name = $(e.target).val();
+        console.log(name);
 
         if (name == '') {
             console.log('None selected');
@@ -42,109 +137,35 @@ $(function() {
                 data: 'templateName=' + name,
                 success: function (data) {
                     console.log('success');
-                    $(e.target).closest('.requestcontainer').find('.panel-body').html(data);
-                    initHandlers();
-                    $(e.target).closest('.requestcontainer').find('input[name="templateName"]').val(name);
+                    var queueitem = container.closest('.queuecontainer');
+                    console.log(queueitem);
+                    $(e.target).closest('.requestcontainer').replaceWith(data);
+                    var newcontainer = $('.requestcontainer', queueitem);
+                    console.log(newcontainer);
+                    initHandlers(newcontainer);
+                    $('input[name="templateName"]', newcontainer).val(name);
                 },
                 error: function (data) {
                     console.log('error');
                 },
             });
         }
-
-        e.preventDefault();
     });
-});
-
-(function ($) {
-      $.fn.serializeAll = function () {
-        var data = [];
-
-        $('[name]', this).each(function () {
-            var name = this.name;
-            var value = $(this).val();
-
-            if (this.type == 'checkbox') {
-                value = $(this).prop('checked');
-            }
-            data.push({ name: name, value: value });
-        });
-
-        return data;
-      }
-    })(jQuery);
-
-function initHandlers() {
-    $('.requestform').submit(function (e) {
-        var form = $(e.target);
-        var data = form.serializeAll();
-        var btn = $(e.target).find('button[type="submit"]');
-        btn.button('loading');
-
-        console.log(data);
-
-        $.ajax({
-            url: '/query',
-            method: 'POST',
-            dataType: 'json',
-            data: data,
-            success: function (data) {
-                showResponse(data);
-                btn.button('reset');
-            },
-            error: function (data) {
-                showResponse(data);
-                btn.button('reset');
-            },
-        });
-
-        $('pre code').each(function(i, block) {
-            hljs.highlightBlock(block);
-        });
-
-        e.preventDefault()
-    });
-
-    $('.parameteradd').click(function(e) {
-        addParameter(e);
-    });
-    $('.parameterrem').click(function(e) {
-        removeParameter(e);
-    });
-    $('.parametervis').click(function(e) {
-        toggleParameter(e);
-    });
-
-    $('.parameterarea').click(function (e) {
-        toggleParameterArea(e);
-    });
-
-    $('.panelmin').click(function (e) {
-        var panel = $(e.target).closest('.panel');
-        panel.find('.panel-body').toggle();
-        e.preventDefault()
-    });
-
-    $('.methodselect > ul > li > a').click(function (e) {
-        var method = $(e.target).html().toLowerCase();
-        console.log(method);
-        $(e.target).closest('.requestcontainer').find('input[name="requestMethod"]').val(method);
-        $(e.target).closest('.requestcontainer').find('.currentMethod').html(method.toUpperCase());
-    });
-
-    $('.requestRaw').ace({theme: 'github', lang: 'json'});
 }
 
-function showResponse(data) {
+function showResponse(container, data) {
+    var responseContainer = container.next('.responsecontainer');
+
     var response = data['content'];
     if (data['headers']['Content-Type'].match(/^application\/json/)) {
         var response = JSON.stringify(JSON.parse(response), null, 2);
     }
-    $('.response').html(response);
-    $('.response').closest('.panel-body').show();
-    $('.responseStatus').html(data['status_code']);
 
-    $('pre code').each(function(i, block) {
+    $('.response', responseContainer).html(response);
+    $('.response', responseContainer).closest('.panel-body').show();
+    $('.responseStatus', responseContainer).html(data['status_code']);
+
+    $('pre code', responseContainer).each(function(i, block) {
         hljs.highlightBlock(block);
     });
 }

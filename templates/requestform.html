@@ -7,7 +7,7 @@
             <input {{ 'disabled' if not parameter.active else '' }} name="requestValues" type="text" class="form-control" placeholder="value" value="{{ parameter.value }}"/>
         </div>
         <div class="col-sm-2">
-            <input name="requestActives" {{ 'checked' if parameter.active else '' }} class="parameterchk" type="checkbox" style="display: none"/>
+            <input name="requestActives" {{ 'checked' if parameter.active else '' }} class="parameterchk" type="checkbox" style="display: block"/>
             <div class="btn-group" role="group">
                 <button class="parametervis btn btn-default btn-sm"><span class="glyphicon glyphicon-ok"></span></button>
                 <button class="parameteradd btn btn-primary btn-sm"><span class="glyphicon glyphicon-plus"></span></button>

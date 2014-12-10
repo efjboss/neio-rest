@@ -1,47 +1,6 @@
 {% extends "layout.html" %}
 
 {% block body %}
+{% include "queueitem.html" with context %}
 
-<div class="panel-group">
-    <div class="requestcontainer panel panel-default">
-        <div class="panel-heading">
-            <h3 class="col-sm-2 panel-title">
-                <a class="panelmin glyphicon glyphicon-minus"></a>
-                Request (<a class="glyphicon glyphicon-remove" href="/reset"></a>)
-            </h3>
-            <div class="templateselect form-group col-sm-3 col-sm-offset-4">
-                <select name="templateSelected" class="form-control input-sm">
-                    <option value="">- Select a template -</option>
-                    {% for template in templates %}
-                    <option value="{{ template.name }}">{{template.name}}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="templatesavecontainer input-group col-sm-3 col-sm-offset-9">
-                <input name="templateName" type="text" class="form-control input-sm" />
-                <div class="input-group-btn">
-                    <button data-loading-text="Saving..." class="templatesave btn btn-default btn-sm">save</button>
-                </div>
-            </div>
-        </div>
-        <div class="panel-body">
-            {% include "request.html" with context %}
-       </div>
-    </div>
-
-    <div class="responsecontainer panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">
-                <span class="panelmin glyphicon glyphicon-minus"></span>
-                Response
-                <span class="badge responseStatus"></span>
-            </h3>
-        </div>
-        <div class="panel-body">
-            <pre>
-    <code class="response"></code>
-            </pre>
-        </div>
-    </div>
-</div>
 {% endblock %}

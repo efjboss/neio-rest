@@ -136,7 +136,8 @@ def request_from_form(request):
 
 @app.route('/reset')
 def reset():
-    del session['request']
+    if 'request' in session:
+        del session['request']
     return redirect('/', code=302)
 
 
@@ -158,12 +159,12 @@ def load():
     print("req: %s" % req)
     return render_template('request.html',
             mode='form',
+            loadedTemplate=template.name,
             request=req,
             templates=get_templates())
 
 @app.route("/save", methods=['POST'])
 def save():
-
     print(request.form);
     req = request_from_form(request)
     name = request.form.get('templateName', '', type=str)

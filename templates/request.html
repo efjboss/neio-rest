@@ -1,32 +1,56 @@
-<form method="post" action="/query" class="form requestform" name="requestForm">
-    <div class="form-group">
-        <div class="col-sm-1" style = "display: none">
-            <input name="requestMethod" type="text" class="form-control"
-            value="{{request.method | lower }}"/>
+<div class="requestcontainer panel panel-default">
+    <div class="panel-heading">
+        <h3 class="col-sm-2 panel-title">
+            <a class="panelmin glyphicon glyphicon-minus"></a>
+            Request (<a class="glyphicon glyphicon-remove" href="/reset"></a>)
+        </h3>
+        <div class="templateselect form-group col-sm-3 col-sm-offset-4">
+            <select name="templateSelected" class="form-control input-sm">
+                <option value="">- Select a template -</option>
+                {% for template in templates %}
+                <option value="{{ template.name }}">{{template.name}}</option>
+                {% endfor %}
+            </select>
         </div>
-        <div class="input-group">
-            <div class="input-group-btn methodselect">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                    <span class="currentMethod">{{ request.method|upper }}</span> <span class="caret"></span>
-                </button>
-                <ul class="dropdown-menu" role="menu">
-                    <li><a href="#">GET</a></li>
-                    <li><a href="#">POST</a></li>
-                </ul>
-            </div>
-
-            <input name="requestUrl" type="text" class="form-control"
-            placeholder="http://" value="{{ request.url }}" />
+        <div class="templatesavecontainer input-group col-sm-3 col-sm-offset-9">
+            <input name="templateName" type="text" class="form-control input-sm" value="{{ loadedTemplate }}"/>
             <div class="input-group-btn">
-                <button data-loading-text="Sending..." type="submit" class="btn
-                    btn-primary">send</button>
+                <button data-loading-text="Saving..." class="templatesave btn btn-default btn-sm">save</button>
             </div>
         </div>
     </div>
+    <div class="panel-body">
+        <form method="post" action="/query" class="form requestform" name="requestForm">
+            <div class="form-group">
+                <div class="col-sm-1" style = "display: none">
+                    <input name="requestMethod" type="text" class="form-control"
+                    value="{{request.method | lower }}"/>
+                </div>
+                <div class="input-group">
+                    <div class="input-group-btn methodselect">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                            <span class="currentMethod">{{ request.method|upper }}</span> <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" role="menu">
+                            <li><a href="#">GET</a></li>
+                            <li><a href="#">POST</a></li>
+                        </ul>
+                    </div>
 
-    {% if mode == 'form' %}
-    {% include 'requestform.html' with context %}
-    {% else %}
-    {% include 'requestraw.html' with context %}
-    {% endif %}
-</form>
+                    <input name="requestUrl" type="text" class="form-control"
+                    placeholder="http://" value="{{ request.url }}" />
+                    <div class="input-group-btn">
+                        <button data-loading-text="Sending..." type="submit" class="btn
+                            btn-primary">send</button>
+                    </div>
+                </div>
+            </div>
+
+            {% if mode == 'form' %}
+            {% include 'requestform.html' with context %}
+            {% else %}
+            {% include 'requestraw.html' with context %}
+            {% endif %}
+        </form>
+   </div>
+</div>
