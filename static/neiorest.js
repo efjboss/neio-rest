@@ -6,7 +6,7 @@ $(function() {
         var name = $(e.target).closest('.templatesavecontainer').find('input[name="templateName"]').val();
         var form = $(e.target).closest('.requestcontainer').find('.requestform');
 
-        data = form.serializeArray();
+        data = form.serializeAll();
         data.push({name: 'templateName', value: name});
 
         $(e.target).button('loading');

@@ -120,7 +120,7 @@ def save_template(template):
     print('saving template')
     data = template.export()
     db = get_db()
-    db.execute('INSERT OR REPLACE INTO `templates` (`name`, `mode`, `data`) VALUES (?, ?)', (template.name, template.mode, data))
+    db.execute('INSERT OR REPLACE INTO `templates` (`name`, `mode`, `data`) VALUES (?, ?, ?)', (template.name, template.mode, data))
     db.commit()
 
 
@@ -157,13 +157,15 @@ def load():
     req = template.request
     print("req: %s" % req)
     return render_template('request.html',
+            mode='form',
             request=req,
             templates=get_templates())
 
 @app.route("/save", methods=['POST'])
 def save():
-    req = request_from_form(request)
 
+    print(request.form);
+    req = request_from_form(request)
     name = request.form.get('templateName', '', type=str)
 
     t = Template(name, 'form', req)
