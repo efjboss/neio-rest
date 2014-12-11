@@ -10,3 +10,7 @@ code.hljs {
 .panelmin:hover {
     cursor: pointer;
 }
+
+.panel-heading a.glyphicon {
+    color: black;
+}
