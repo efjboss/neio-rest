@@ -1,0 +1,7 @@
+{% for item in queue %}
+    {% if item.type == 'request' %}
+        {% set request = item.contents %}
+        {% include 'queueitem.html' with context %}
+    {% else %}
+    {% endif %}
+{% endfor %}

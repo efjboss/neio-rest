@@ -15,7 +15,15 @@ $(function() {
         var container = $(this);
         $('.panel-body', container).show();
         initHandlers(container);
+    });
 
+    $('.queuecontainer').each(function () {
+        var container = $(this);
+        $('.panelmin', container).click(function (e) {
+            var panel = $(e.target).closest('.panel');
+            panel.find('.panel-body').toggle();
+            e.preventDefault()
+        });
     });
 });
 

@@ -1,9 +1,37 @@
 <div class="queuecontainer panel panel-default">
+    <div class="panel-heading">
+        <div class="col-sm-1">
+            <span class="panelmin glyphicon glyphicon-minus"></span>
+        </div>
+        <div class="col-sm-offset-11 text-right">
+            <button class="btn btn-default btn-sm">
+                <span class="glyphicon glyphicon-ok"></span>
+            </button>
+            <button class="btn btn-default btn-sm">
+                <span class="glyphicon glyphicon-remove"></span>
+            </button>
+        </div>
+    </div>
     <div class="panel-body">
         <div class="panel-group">
             {% include 'request.html' with context %}
 
             {% include 'response.html' with context %}
+        </div>
+    </div>
+    <div class="panel-footer">
+        <div class="queueactions col-sm-2">
+            <button class="btn btn-default btn-sm">
+                <span class="glyphicon glyphicon-arrow-up"></span>
+            </button>
+            <button class="btn btn-default btn-sm">
+                <span class="glyphicon glyphicon-arrow-down"></span>
+            </button>
+        </div>
+        <div class="queueactions col-sm-offset-10 text-right">
+            <button class="btn btn-default btn-sm">
+                <span class="glyphicon glyphicon-plus"></span>
+            </button>
         </div>
     </div>
 </div>

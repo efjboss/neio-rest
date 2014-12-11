@@ -12,6 +12,11 @@ import config
 
 app = Flask(__name__)
 
+class QueueItem(object):
+    def __init__(self, type, contents):
+        self.type = type
+        self.contents = contents
+
 class Template(object):
     def __init__(self, name, mode='form', req = None):
         self.name = name
@@ -145,7 +150,7 @@ def reset():
 def index():
     return render_template('index.html',
             mode='form',
-            request=load_request(),
+            queue=[QueueItem('request', load_request())],
             templates=get_templates())
 
 @app.route("/load", methods=['POST'])
