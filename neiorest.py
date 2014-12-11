@@ -12,6 +12,12 @@ import config
 
 app = Flask(__name__)
 
+class Encoder(json.JSONEncoder):
+    def default(self, o):
+        if isinstance(o, Parameter):
+            return o.export()
+        return json.JSONEncoder.default(self, o)
+
 class QueueItem(object):
     def __init__(self, type, contents):
         self.type = type
@@ -43,6 +49,8 @@ class Request(object):
 
     @staticmethod
     def fromJson(raw):
+        print('From json');
+        print(raw)
         decoded = json.loads(raw)
         obj = Request()
         obj.url = decoded['url']
@@ -59,8 +67,18 @@ class Request(object):
             return requests.post(self.url, data=params, verify=False)
         return None
 
+    def export(self):
+        return {
+            'url': self.url,
+            'method': self.method,
+            'parameters': self.parameters
+        }
+
     def __str__(self):
-        return '{"url": "%s", "method": "%s", "parameters": [%s]}' % (self.url, self.method, ', '.join([str(p) for p in self.parameters]))
+        s = json.dumps(self.export(), cls=Encoder)
+        print(s)
+        return s
+        #return '{"url": "%s", "method": "%s", "parameters": [%s]}' % (self.url, self.method, ', '.join([str(p) for p in self.parameters]))
 
 class Parameter(object):
     def __init__(self, key='', value='', active=True):
@@ -68,9 +86,15 @@ class Parameter(object):
         self.value = value
         self.active = active
 
+    def export(self):
+        return {
+                'key': self.key,
+                'value': self.value,
+                'active': 'true' if self.active else 'false',
+        }
+
     def __str__(self):
-        return '{"key": "%s", "value": "%s", "active": %s}' % (self.key,
-                self.value, 'true' if self.active else 'false')
+        return json.dumps(self.export(), cls=Encoder)
 
 def load_request():
     print('loading request')
@@ -124,9 +148,11 @@ def get_template(name):
 def save_template(template):
     print('saving template')
     data = template.export()
+    print(data)
     db = get_db()
     db.execute('INSERT OR REPLACE INTO `templates` (`name`, `mode`, `data`) VALUES (?, ?, ?)', (template.name, template.mode, data))
     db.commit()
+    print('saved template')
 
 
 def request_from_form(request):
