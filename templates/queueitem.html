@@ -3,6 +3,11 @@
         <div class="col-sm-1">
             <span class="panelmin glyphicon glyphicon-minus"></span>
         </div>
+        <div class="queueUrl col-sm-4">
+            {% if request.url %}
+            <i>{{request.url}}</i>
+            {% endif %}
+        </div>
         <div class="col-sm-offset-11 text-right">
             <button class="btn btn-default btn-sm">
                 <span class="glyphicon glyphicon-ok"></span>

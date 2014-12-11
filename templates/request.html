@@ -8,7 +8,11 @@
             <select name="templateSelected" class="form-control input-sm">
                 <option value="">- Select a template -</option>
                 {% for template in templates %}
-                <option value="{{ template.name }}">{{template.name}}</option>
+                    {% if loadedTemplate == template.name %}
+                        <option selected value="{{ template.name }}">{{template.name}}</option>
+                    {% else %}
+                        <option value="{{ template.name }}">{{template.name}}</option>
+                    {% endif %}
                 {% endfor %}
             </select>
         </div>

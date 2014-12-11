@@ -54,18 +54,22 @@ function initHandlers(container) {
 
         btn.button('loading');
 
+        var handle = function (responseData) {
+            showResponse(container, responseData);
+             $('.queueUrl > i', container.closest('.queuecontainer')).html($('input[name="requestUrl"]', form).val());
+            btn.button('reset');
+        };
+
         $.ajax({
             url: '/query',
             method: 'POST',
             dataType: 'json',
             data: data,
             success: function (data) {
-                showResponse(container, data);
-                btn.button('reset');
+                handle(data);
             },
             error: function (data) {
-                showResponse(container, data);
-                btn.button('reset');
+                handle(data);
             },
         });
     });
@@ -113,6 +117,7 @@ function initHandlers(container) {
             data: data,
             success: function (data) {
                 $(e.target).button('reset');
+                 $('.queueUrl > i', container.closest('.queuecontainer')).html($('input[name="requestUrl"]', form).val());
             },
             error: function (data) {
                 $(e.target).button('reset');
@@ -123,7 +128,6 @@ function initHandlers(container) {
     });
 
     $('.templateselect > select', container).change(function (e) {
-        e.preventDefault();
         var name = $(e.target).val();
 
         if (name == '') {
@@ -138,6 +142,7 @@ function initHandlers(container) {
                     var newcontainer = $('.requestcontainer', queueitem);
                     initHandlers(newcontainer);
                     $('input[name="templateName"]', newcontainer).val(name);
+                    $('.queueUrl > i', newcontainer.closest('.queuecontainer')).html($('input[name="requestUrl"]', $('.requestform', newcontainer)).val());
                 },
                 error: function (data) {
                     console.log('error');
